@@ -1,13 +1,50 @@
 
-var regex = new RegExp(/([0-9]+,[0-9]+&nbsp;[€$])/, "gm")
-var regex_cleanup = new RegExp(/(<p class="price-hidden">)([0-9]+,[0-9]+&nbsp;[€$])(<\/p>)/, "gm")
-var extensionEnabled = true;
-var created = false;
+const myStyleElement = document.createElement("style");
+const cssRuleElement = `span[class*="-price"]{
+color: transparent!important;
+text-shadow: rgba(0, 0, 0, 0.8) 10px 0px 10px !important;
+border-style: dotted;
+border-color: #f23838;
+}
+`;
 
-function setEnabled(boolean) {
+let extensionEnabled = true;
+
+const setEnabled = (boolean) => {
     extensionEnabled = boolean;
 }
 
+const overlay_on = () => {
+    createOverlay();
+    document.getElementById("hide-overlay").style.display = "block";
+}
+
+const overlay_off = () => {
+    createOverlay();
+    document.getElementById("hide-overlay").style.display = "none";
+}
+
+const hide_price = () => {
+    document.head.appendChild(myStyleElement);
+    myStyleElement.sheet.insertRule(cssRuleElement, 0);
+}
+
+const show_price = () => {
+    document.head.appendChild(myStyleElement);
+    myStyleElement.sheet.deleteRule(0)
+}
+
+const createOverlay = () => {
+    if (!document.getElementById("hide-overlay")) {
+        var newDiv = document.createElement("div");
+        newDiv.setAttribute("id", "hide-overlay");
+        document.childNodes[1].appendChild(newDiv)
+    }
+}
+
+/**
+ * Content to Background communication
+ */
 chrome.runtime.sendMessage({ provide_enabled: "extensionEnabled" }, function (response) {
     extensionEnabled = response.enabled;
 });
@@ -28,68 +65,15 @@ chrome.runtime.onMessage.addListener(
         }
     });
 
-function overlay_on() {
-    createOverlay();
-    document.getElementById("hide-overlay").style.display = "block";
-}
-
-function overlay_off() {
-    createOverlay();
-    document.getElementById("hide-overlay").style.display = "none";
-}
-
-function hide_price() {
-    var dom_body_string = document.body.innerHTML;
-    document.body.innerHTML = dom_body_string.replace(regex, "<p class=\"price-hidden\">$1</p>")
-}
-
-function show_price() {
-    var dom_body_string = document.body.innerHTML;
-    document.body.innerHTML = dom_body_string.replace(regex_cleanup, "$2") // group 2 is price and group 1 is the css inline code
-}
-
-function createOverlay() {
-    if (!document.getElementById("hide-overlay")) {
-        var newDiv = document.createElement("div");
-        newDiv.setAttribute("id", "hide-overlay");
-        document.childNodes[1].appendChild(newDiv)
-    }
-}
-
-
-function startObserving() {
-    // OBSERVER FOR CHANGES
-    // Select the node that will be observed for mutations
-    const targetNode = document.childNodes[1];
-
-    // Options for the observer (which mutations to observe)
-    const config = { attributes: true, childList: true, subtree: true };
-
-    // Callback function to execute when mutations are observed
-    const callback = function (mutationsList, observer) {
-        if (extensionEnabled) {
-            for (let mutation of mutationsList) {
-                if (mutation.type === 'childList') {
-                    // TODO find out when something is clicked that destroyed the price stuff!
-                }
-            }
-        }
-    };
-
-    // Create an observer instance linked to the callback function
-    const observer = new MutationObserver(callback);
-
-    // Start observing the target node for configured mutations
-    observer.observe(targetNode, config);
-}
-
+/**
+ * Extension hide/show
+ */
 createOverlay();
 
 document.addEventListener('DOMContentLoaded', (event) => {
     if (extensionEnabled) {
         hide_price();
         overlay_off();
-        // startObserving(); TODO
     }
 });
 

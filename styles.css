@@ -7,14 +7,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgb(53, 53, 53);
-    z-index: 2;
+    background-color: rgb(32, 32, 32);
+    z-index: 99;
     cursor: pointer;
   }
-
-.price-hidden{
-    color: transparent!important;
-    text-shadow: rgba(0, 0, 0, 0.8) 10px 0px 10px !important;
-    border-style: dotted;
-    border-color: red;
-}

@@ -1,5 +1,8 @@
 var extensionEnabled = true;
 
+/**
+ * Content to Background communication
+ */
 chrome.tabs.query({ currentWindow: true }, function (tabs) {
     tabs.forEach(found_tab => {
         if (extensionEnabled) {
@@ -13,6 +16,16 @@ chrome.tabs.query({ currentWindow: true }, function (tabs) {
     });
 });
 
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        if (request.provide_enabled == "extensionEnabled") {
+            sendResponse({ enabled: extensionEnabled });
+        }
+    });
+
+/**
+ * Extension Enabled and disabled button functionality
+ */
 chrome.browserAction.onClicked.addListener(function (tab) {
     extensionEnabled = !extensionEnabled;
 
@@ -30,9 +43,3 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     });
 });
 
-chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        if (request.provide_enabled == "extensionEnabled") {
-            sendResponse({ enabled: extensionEnabled });
-        }
-    });
