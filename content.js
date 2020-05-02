@@ -1,6 +1,6 @@
 
 const myStyleElement = document.createElement("style");
-const cssRuleElement = `span[class*="-price"]{
+const cssRuleElement = `span[class*="price"]{
 color: transparent!important;
 text-shadow: rgba(0, 0, 0, 0.8) 10px 0px 10px !important;
 border-style: dotted;
