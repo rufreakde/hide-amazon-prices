@@ -19,7 +19,6 @@ Get yourself a list of random items in several tabs:
 and play the game go through your tabs with your friends and try to guess the prices right :)
 
 # how to play remote
-
 Use [discord](https://discordapp.com/) screen sharing guys :)
 
 # reveal prices

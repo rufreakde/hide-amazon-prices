@@ -15,13 +15,18 @@ const setEnabled = (boolean) => {
 }
 
 const overlay_on = () => {
-    createOverlay();
-    document.getElementById("hide-overlay").style.display = "block";
+    overlay_set('block');
 }
 
 const overlay_off = () => {
+    overlay_set('none');
+}
+
+const overlay_set = (displayStyle) => {
     createOverlay();
-    document.getElementById("hide-overlay").style.display = "none";
+    if (document.getElementById("hide-overlay")) {
+        document.getElementById("hide-overlay").style.display = displayStyle;
+    }
 }
 
 const hide_price = () => {
@@ -35,7 +40,7 @@ const show_price = () => {
 }
 
 const createOverlay = () => {
-    if (!document.getElementById("hide-overlay")) {
+    if (!document.getElementById("hide-overlay") && document.childNodes[1]) {
         var newDiv = document.createElement("div");
         newDiv.setAttribute("id", "hide-overlay");
         document.childNodes[1].appendChild(newDiv)
