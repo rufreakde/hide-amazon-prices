@@ -1,8 +1,10 @@
 const myStyleElement = document.createElement("style");
+const blurr = useBlurr ? "text-shadow: rgba(0, 0, 0, 0.8) -10px 0px 30px !important;" : "";
 const cssRuleElement = `span[class*="price"],
 span[class="tmm-olp-links"] *
 {
     color: transparent !important;
+    ${blurr}
     user-select: none;
   }
 `;
